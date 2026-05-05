@@ -509,3 +509,15 @@ function generateFracLesson() {
 
     return t;
 }
+export function generateMathLesson(skillId) {
+    const generators = {
+        add: generateAddLesson,
+        sub: generateSubLesson,
+        mul: generateMulLesson,
+        div: generateDivLesson,
+        eq: generateEqLesson,
+        geom: generateGeomLesson,
+        frac: generateFracLesson,
+    };
+    return generators[skillId] ? generators[skillId]() : [];
+}
