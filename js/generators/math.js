@@ -34,7 +34,8 @@ export function generateSubLesson() {
     const pd = []; const ua = new Set();
     while (pd.length < 3) { const [a, b] = g(); const ans = sub(a, b); if (!ua.has(ans)) { ua.add(ans); pd.push({ left: `${a} - ${b}`, right: `${ans}`, answer: ans }); } }
     t.push(pairT('🔗', 'Парное', 'badge-pair', 'Соедини выражения:', pd, 'Соединяем пары'));
-    t.push(choiceT('⚠️', 'Ловушка', 'badge-trap', `${rnd(10, 30)} - ${rnd(10, 30)} = ?`, 0, 'Одинаковые числа — 0!'));
+    const sameNum = rnd(10, 30);
+    t.push(choiceT('⚠️', 'Ловушка', 'badge-trap', `${sameNum} - ${sameNum} = ?`, 0, 'Одинаковые числа — 0!'));
     const [a6, b6] = g(); t.push(inputT('✏️', 'Ввод', 'badge-input', `${a6} - ${b6} = ?`, sub(a6, b6), 'Пишем ответ'));
     const [a7, b7] = g(); t.push(inputT('✏️', 'Ввод', 'badge-input', `${a7} - ${b7} = ?`, sub(a7, b7), 'Пишем ответ'));
     const [tot, sp] = [rnd(30, 80), rnd(5, 30)];
