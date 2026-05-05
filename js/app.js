@@ -20,7 +20,7 @@ export function updateStats() {
     if (state.gems > oldGems) {
         const diff = state.gems - oldGems;
         const gemEl = $('#gemCount');
-        if (gemEl) {
+        i if (gemEl && diff > 0) {
             const rect = gemEl.getBoundingClientRect();
             spawnGems(Math.min(diff, 5), rect.left, rect.top - 30, gemEl);
         }
