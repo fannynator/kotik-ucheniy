@@ -86,30 +86,30 @@ export function generateAddLesson() {
 }
 
 // ══════════ ВЫЧИТАНИЕ ══════════
-export function generateSubLesson() {
+ export function generateSubLesson() {
     const t = [], sub = (a, b) => a - b;
     
     const [a1, b1] = [rnd(10, 40), rnd(1, 9)];
     t.push(choiceT('🔥', 'Разминка', 'badge-warmup', `${a1} - ${b1} = ?`, sub(a1, b1), `${a1} - ${b1} = ${sub(a1, b1)}`));
     
     const [a2, b2] = [rnd(5, 15), rnd(1, a2 - 1)];
-    t.push({...choiceT('🖼️', 'Визуальное', 'badge-visual', `Было ${a2}, убрали ${b2}. Сколько осталось?`, sub(a2, b2), `${a2} - ${b2} = ${sub(a2, b2)}`), visual: appleSVG(sub(a2, b2))});
+    t.push(choiceT('🎯', 'Выбор', 'badge-choice', `Было ${a2}, убрали ${b2}. Осталось?`, sub(a2, b2), `${a2} - ${b2} = ${sub(a2, b2)}`));
     
     const [a3, b3] = [rnd(20, 50), rnd(5, 15)];
     t.push(choiceT('🎯', 'Выбор', 'badge-choice', `${a3} - ${b3} = ?`, sub(a3, b3), 'Выбирай внимательно'));
     
-    const pd = [], ua2 = new Set();
-    while (pd.length < 3) { const a = rnd(10, 40), b = rnd(1, 9); const ans = sub(a, b); if (!ua2.has(ans)) { ua2.add(ans); pd.push({ left: `${a} - ${b}`, right: `${ans}`, answer: ans }); } }
-    t.push(pairT('🔗', 'Парное', 'badge-pair', 'Соедини примеры с ответами:', pd, 'Нажимай левый → правый'));
+    const pd = [], ua = new Set();
+    while (pd.length < 3) { const a = rnd(10, 40), b = rnd(1, 9); const ans = sub(a, b); if (!ua.has(ans)) { ua.add(ans); pd.push({ left: `${a} - ${b}`, right: `${ans}`, answer: ans }); } }
+    t.push(pairT('🔗', 'Парное', 'badge-pair', 'Соедини:', pd, 'Нажимай левый → правый'));
     
     const [a5, b5] = [rnd(30, 80), rnd(10, a5 - 1)];
     t.push(inputT('✏️', 'Ввод', 'badge-input', `${a5} - ${b5} = ?`, sub(a5, b5), `${a5} - ${b5} = ${sub(a5, b5)}`));
     
     const same = rnd(10, 30);
-    t.push(choiceT('⚠️', 'Ловушка', 'badge-trap', `${same} - ${same} = ?`, 0, 'Одинаковые числа — разность 0!'));
+    t.push(choiceT('⚠️', 'Ловушка', 'badge-trap', `${same} - ${same} = ?`, 0, 'Одинаковые числа — 0!'));
     
     const [a7, b7] = [rnd(60, 99), rnd(20, a7 - 1)];
-    t.push(inputT('✏️', 'Ввод сложнее', 'badge-input', `${a7} - ${b7} = ?`, sub(a7, b7), 'Вычитаем большие числа'));
+    t.push(inputT('✏️', 'Ввод сложнее', 'badge-input', `${a7} - ${b7} = ?`, sub(a7, b7), 'Вычитаем большие'));
     
     const price = rnd(20, 80), paid = price + rnd(10, 50);
     t.push(inputT('⭐', 'Босс', 'badge-boss', `Покупка ${price} руб. Дали ${paid} руб. Сдача?`, sub(paid, price), `${paid} - ${price} = ${sub(paid, price)}`));
