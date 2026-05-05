@@ -135,8 +135,32 @@ body.dark-theme .achievement-toast {
     background: linear-gradient(135deg, #1E293B, #334155);
 }
 
-body.dark-theme .trap-quiz-overlay .panel-card {
+body.dark-theme .trap-quiz-overlay .panel-card,
+body.dark-theme #trapQuizCard {
     background: #1E293B;
+    color: #F1F5F9;
+}
+
+body.dark-theme .task-option {
+    color: #F1F5F9 !important;
+    border-color: #475569 !important;
+    background: #0F172A;
+}
+
+body.dark-theme .task-input {
+    color: #F1F5F9 !important;
+    background: #0F172A !important;
+    border-color: #475569 !important;
+}
+
+body.dark-theme .task-option.correct-pick {
+    border-color: var(--green) !important;
+    background: rgba(16, 185, 129, 0.2) !important;
+}
+
+body.dark-theme .task-option.wrong-pick {
+    border-color: var(--red) !important;
+    background: rgba(239, 68, 68, 0.15) !important;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
