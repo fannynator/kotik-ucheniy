@@ -1,10 +1,142 @@
 :root {
-    --math-primary: #3B82F6; --math-light: #EFF6FF; --math-gradient: linear-gradient(135deg, #3B82F6, #1D4ED8);
-    --rus-primary: #7C3AED; --rus-light: #F5F3FF; --rus-gradient: linear-gradient(135deg, #7C3AED, #5B21B6);
-    --green: #10B981; --green-light: #D1FAE5; --red: #EF4444; --red-light: #FEE2E2;
-    --orange: #F59E0B; --gold: #FBBF24; --gold-light: #FEF3C7;
-    --bg: #F8FAFC; --card: #FFFFFF; --text: #1E293B; --text-light: #94A3B8;
-    --shadow-sm: 0 1px 2px rgba(0,0,0,0.05); --shadow: 0 4px 12px rgba(0,0,0,0.08); --shadow-lg: 0 12px 40px rgba(0,0,0,0.12);
+    --math-primary: #3B82F6;
+    --math-light: #EFF6FF;
+    --math-gradient: linear-gradient(135deg, #3B82F6, #1D4ED8);
+    --rus-primary: #7C3AED;
+    --rus-light: #F5F3FF;
+    --rus-gradient: linear-gradient(135deg, #7C3AED, #5B21B6);
+    --green: #10B981;
+    --green-light: #D1FAE5;
+    --red: #EF4444;
+    --red-light: #FEE2E2;
+    --orange: #F59E0B;
+    --gold: #FBBF24;
+    --gold-light: #FEF3C7;
+    --bg: #F8FAFC;
+    --card: #FFFFFF;
+    --text: #1E293B;
+    --text-light: #94A3B8;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+    --shadow: 0 4px 12px rgba(0,0,0,0.08);
+    --shadow-lg: 0 12px 40px rgba(0,0,0,0.12);
+    --panel-overlay: rgba(15, 23, 42, 0.7);
+    --input-bg: rgba(255,255,255,0.08);
+}
+
+/* Тёмная тема */
+body.dark-theme {
+    --bg: #0F172A;
+    --card: #1E293B;
+    --text: #F1F5F9;
+    --text-light: #94A3B8;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
+    --shadow: 0 4px 12px rgba(0,0,0,0.4);
+    --shadow-lg: 0 12px 40px rgba(0,0,0,0.6);
+    --panel-overlay: rgba(0, 0, 0, 0.8);
+    background: #0F172A;
+    background-size: 400% 400%;
+    color: #F1F5F9;
+}
+
+body.dark-theme .app {
+    background: #0F172A;
+}
+
+body.dark-theme .bottom-nav {
+    background: #1E293B;
+    border-top-color: #334155;
+}
+
+body.dark-theme .skill-card {
+    background: #1E293B;
+    border-color: #334155;
+    color: #F1F5F9;
+}
+
+body.dark-theme .skill-card:hover {
+    border-color: #475569;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+}
+
+body.dark-theme .skill-card.completed {
+    background: linear-gradient(135deg, #1E293B 0%, #0F2F1F 100%);
+}
+
+body.dark-theme .skill-progress-bar {
+    background: #334155;
+}
+
+body.dark-theme .panel-card {
+    background: #1E293B;
+    color: #F1F5F9;
+}
+
+body.dark-theme .story-card {
+    background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%);
+    border-color: #334155;
+}
+
+body.dark-theme .trap-item {
+    background: #1E293B;
+    border-color: #334155;
+}
+
+body.dark-theme .trap-item.defused {
+    background: #0F172A;
+}
+
+body.dark-theme .cat-speech-bubble {
+    background: #1E293B;
+    color: #F1F5F9;
+}
+
+body.dark-theme .cat-stage.math-stage {
+    background: linear-gradient(180deg, #1E293B 0%, #0F172A 100%);
+}
+
+body.dark-theme .cat-stage.rus-stage {
+    background: linear-gradient(180deg, #1E293B 0%, #0F172A 100%);
+}
+
+body.dark-theme .panel-close {
+    background: #334155;
+    color: #F1F5F9;
+}
+
+body.dark-theme .panel-close:hover {
+    background: #475569;
+}
+
+body.dark-theme .reset-progress-btn {
+    border-color: #334155;
+    color: #94A3B8;
+}
+
+body.dark-theme .reset-progress-btn:hover {
+    background: #450A0A;
+    border-color: #991B1B;
+    color: #FCA5A5;
+}
+
+body.dark-theme .tutorial-card {
+    background: #1E293B;
+    color: #F1F5F9;
+}
+
+body.dark-theme .lesson-container.math-lesson {
+    background: linear-gradient(180deg, #0F0F1A 0%, #1A1A2E 100%);
+}
+
+body.dark-theme .lesson-container.rus-lesson {
+    background: linear-gradient(180deg, #0F0A1A 0%, #1A0F2E 100%);
+}
+
+body.dark-theme .achievement-toast {
+    background: linear-gradient(135deg, #1E293B, #334155);
+}
+
+body.dark-theme .trap-quiz-overlay .panel-card {
+    background: #1E293B;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
