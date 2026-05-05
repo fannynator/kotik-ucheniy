@@ -140,6 +140,10 @@ function init() {
     document.body.classList.add('dark-theme');
     }
     loadState();
+     // Ежедневный streak
+    updateDailyStreak();
+    // Приветственное мяу
+    setTimeout(() => playSound('meow'), 500);
     updateSubjectUI();
     renderSkillTree();
     updateTrapsBadge();
