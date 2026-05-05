@@ -20,16 +20,32 @@ export const showToast = (emoji, message, toastEl) => {
     toastEl._tid = setTimeout(() => toastEl.classList.remove('show'), 2000);
 };
 
-export const makeWrongs = (correct, count = 3) => {
+eexport const makeWrongs = (correct, count = 3) => {
     const wrongs = new Set();
-    while (wrongs.size < count) {
+    const maxAttempts = 50;
+    let attempts = 0;
+    
+    while (wrongs.size < count && attempts < maxAttempts) {
+        attempts++;
         let delta;
-        if (correct <= 10) delta = rnd(-3, 3);
-        else if (correct <= 50) delta = rnd(-Math.floor(correct * 0.3), Math.floor(correct * 0.3));
-        else delta = rnd(-Math.floor(correct * 0.2), Math.floor(correct * 0.2));
+        if (correct <= 10) {
+            delta = rnd(-5, 5);
+        } else if (correct <= 50) {
+            delta = rnd(-Math.floor(correct * 0.3), Math.floor(correct * 0.3));
+        } else {
+            delta = rnd(-Math.floor(correct * 0.2), Math.floor(correct * 0.2));
+        }
+        
+        // Убеждаемся что дельта не ноль и не уводит в минус
+        if (delta === 0) delta = rnd(1, 3) * (Math.random() > 0.5 ? 1 : -1);
+        
         const candidate = correct + delta;
-        if (candidate !== correct && candidate >= 0 && !wrongs.has(candidate)) wrongs.add(candidate);
+        
+        if (candidate !== correct && candidate >= 0 && !wrongs.has(candidate)) {
+            wrongs.add(candidate);
+        }
     }
+    
     return [...wrongs];
 };
 
