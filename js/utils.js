@@ -53,6 +53,7 @@ export const choiceT = (emoji, badge, badgeClass, question, correct, explanation
     const allOptions = [correct, ...makeWrongs(correct)];
     const options = shuffle(allOptions);
     const correctIdx = options.findIndex(opt => opt === correct);
+    
     return { type: 'choice', emoji, badge, badgeClass, question, options, correctIdx, correctAns: correct, explanation };
 };
 
