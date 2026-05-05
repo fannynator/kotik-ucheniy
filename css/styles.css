@@ -432,3 +432,110 @@ body::before {
 .explanation-box.show { display:block; }
 .explanation-box.good { border-left-color:var(--green); background:rgba(16,185,129,0.08); font-weight:600; }
 .explanation-box.bad { border-left-color:var(--red); background:rgba(239,68,68,0.06); font-weight:600; }
+
+/* ========== ОПТИМИЗАЦИЯ ДЛЯ ТЕЛЕФОНОВ ========== */
+@media (max-width: 480px) {
+    body {
+        padding: 0;
+        align-items: flex-start;
+    }
+    
+    .app {
+        border-radius: 0;
+        height: 100vh;
+        max-height: 100vh;
+        max-width: 100%;
+    }
+    
+    .lesson-option,
+    .task-option {
+        padding: 16px 10px;
+        font-size: 16px;
+        min-height: 52px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .lesson-options,
+    .task-options {
+        gap: 10px;
+    }
+    
+    .btn-lesson-submit,
+    .btn-submit {
+        padding: 16px 20px;
+        font-size: 16px;
+    }
+    
+    .lesson-input,
+    .task-input {
+        padding: 16px;
+        font-size: 18px;
+    }
+    
+    .lesson-close,
+    .story-close-btn {
+        width: 36px;
+        height: 36px;
+        font-size: 18px;
+    }
+    
+    .nav-btn {
+        padding: 8px 2px;
+        font-size: 11px;
+    }
+    
+    .nav-icon {
+        font-size: 22px;
+    }
+    
+    .cat-emoji {
+        width: 70px;
+        height: 70px;
+        font-size: 40px;
+    }
+    
+    .header {
+        padding: 10px 12px 8px;
+    }
+    
+    .header-app-name {
+        font-size: 14px;
+    }
+    
+    .subject-btn {
+        padding: 10px 8px;
+        font-size: 11px;
+    }
+    
+    .main-content {
+        padding: 4px 8px 6px;
+    }
+    
+    .skill-card {
+        padding: 10px;
+    }
+    
+    .panel-card {
+        width: 94%;
+        max-height: 85vh;
+        padding: 16px 12px;
+    }
+    
+    .finish-emoji {
+        font-size: 48px;
+    }
+    
+    .boss-input {
+        width: 60px;
+        padding: 8px;
+    }
+}
+
+/* Отключаем зум на iOS */
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+    input, textarea, select {
+        font-size: 16px !important;
+    }
+}
