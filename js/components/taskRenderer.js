@@ -27,6 +27,14 @@ export function renderTask(container, task, options = {}) {
         questionEl.className = compact ? 'scene-text' : 'lesson-question';
         if (task.question) questionEl.textContent = task.question;
         container.appendChild(questionEl);
+
+        // Показываем визуализацию (SVG), если есть
+if (task.visual) {
+    const visualEl = document.createElement('div');
+    visualEl.innerHTML = task.visual;
+    visualEl.style.cssText = 'margin:8px 0;';
+    container.appendChild(visualEl);
+}
         
         const explanationEl = document.createElement('div');
         explanationEl.className = compact ? 'explanation-box' : 'lesson-explanation';
