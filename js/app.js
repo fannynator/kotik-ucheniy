@@ -16,11 +16,21 @@ export function updateStats() {
     $('#gemCount').textContent = state.gems;
     $('#streakCount').textContent = state.streak;
     
-    // Если гемов стало больше — анимация
+    // Огонёк при streak >= 7
+    const streakEl = $('#streakCount');
+    if (streakEl) {
+        if (state.streak >= 7) {
+            streakEl.classList.add('streak-fire');
+        } else {
+            streakEl.classList.remove('streak-fire');
+        }
+    }
+    
+    // Гемы летят
     if (state.gems > oldGems) {
         const diff = state.gems - oldGems;
         const gemEl = $('#gemCount');
-         if (gemEl && diff > 0) {
+        if (gemEl && diff > 0) {
             const rect = gemEl.getBoundingClientRect();
             spawnGems(Math.min(diff, 5), rect.left, rect.top - 30, gemEl);
         }
