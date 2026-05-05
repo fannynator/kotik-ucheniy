@@ -32,6 +32,18 @@ export function renderProfile() {
     html += '</div><button class="reset-progress-btn" id="resetProgressBtn">🔄 Сбросить прогресс</button>';
     $('#profileContent').innerHTML = html;
 
+    const themeBtn = $('#toggleThemeBtn');
+if (themeBtn) {
+    const isDark = document.body.classList.contains('dark-theme');
+    themeBtn.textContent = isDark ? '☀️ Светлая тема' : '🌙 Тёмная тема';
+    themeBtn.addEventListener('click', () => {
+        document.body.classList.toggle('dark-theme');
+        const isDarkNow = document.body.classList.contains('dark-theme');
+        themeBtn.textContent = isDarkNow ? '☀️ Светлая тема' : '🌙 Тёмная тема';
+        localStorage.setItem('kot_ucheniy_dark_theme', isDarkNow ? '1' : '0');
+    });
+}
+
     $('#resetProgressBtn').addEventListener('click', () => {
         if (confirm('Точно сбросить ВЕСЬ прогресс?')) {
             if (confirm('Последний шанс. Сбросить?')) {
