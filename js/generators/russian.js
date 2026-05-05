@@ -524,3 +524,16 @@ function generateNNLesson() {
 
     return tasks;
 }
+// Экспорт-диспетчер: вызывает нужный генератор по skillId
+export function generateRusLesson(skillId) {
+    const generators = {
+        zhishi: generateZhishiLesson,
+        soft: generateSoftLesson,
+        vowel: generateVowelLesson,
+        silent: generateSilentLesson,
+        tsya: generateTsyaLesson,
+        prepri: generatePrepriLesson,
+        nn: generateNNLesson,
+    };
+    return generators[skillId] ? generators[skillId]() : [];
+}
