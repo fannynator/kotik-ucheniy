@@ -3,7 +3,20 @@
 let audioCtx = null;
 
 function getAudioContext() {
-    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if (!audioCtx) {
+        try {
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        } catch (e) {
+            console.warn('AudioContext не поддерживается');
+            return null;
+        }
+    }
+    
+    // Если контекст suspended — резюмируем
+    if (audioCtx.state === 'suspended') {
+        audioCtx.resume().catch(() => {});
+    }
+    
     return audioCtx;
 }
 
@@ -58,27 +71,26 @@ function playPetSound() {
         if (!ctx || ctx.state === 'closed') return;
         const now = ctx.currentTime;
         
-        // "Мя" — короткий высокий
+        // "Мя" — короткий высокий тон
         const osc1 = ctx.createOscillator();
         const gain1 = ctx.createGain();
-        osc1.type = 'sine';
-        osc1.frequency.setValueAtTime(650, now);
-        osc1.frequency.linearRampToValueAtTime(850, now + 0.06);
-        osc1.frequency.linearRampToValueAtTime(700, now + 0.12);
-        gain1.gain.setValueAtTime(0.22, now);
+        osc1.type = 'triangle';
+        osc1.frequency.setValueAtTime(700, now);
+        osc1.frequency.linearRampToValueAtTime(900, now + 0.06);
+        gain1.gain.setValueAtTime(0.2, now);
         gain1.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
         osc1.connect(gain1);
         gain1.connect(ctx.destination);
         osc1.start(now);
         osc1.stop(now + 0.15);
         
-        // "у" — протяжный низкий
+        // "у" — низкий протяжный тон
         const osc2 = ctx.createOscillator();
         const gain2 = ctx.createGain();
-        osc2.type = 'sine';
-        osc2.frequency.setValueAtTime(480, now + 0.08);
-        osc2.frequency.linearRampToValueAtTime(350, now + 0.35);
-        gain2.gain.setValueAtTime(0.16, now + 0.08);
+        osc2.type = 'triangle';
+        osc2.frequency.setValueAtTime(450, now + 0.08);
+        osc2.frequency.linearRampToValueAtTime(320, now + 0.35);
+        gain2.gain.setValueAtTime(0.15, now + 0.08);
         gain2.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
         osc2.connect(gain2);
         gain2.connect(ctx.destination);
@@ -94,13 +106,12 @@ function playMeowSound() {
         if (!ctx || ctx.state === 'closed') return;
         const now = ctx.currentTime;
         
-        // Короткое "мя!"
         const osc1 = ctx.createOscillator();
         const gain1 = ctx.createGain();
-        osc1.type = 'sine';
-        osc1.frequency.setValueAtTime(700, now);
-        osc1.frequency.linearRampToValueAtTime(900, now + 0.05);
-        gain1.gain.setValueAtTime(0.2, now);
+        osc1.type = 'triangle';
+        osc1.frequency.setValueAtTime(750, now);
+        osc1.frequency.linearRampToValueAtTime(950, now + 0.05);
+        gain1.gain.setValueAtTime(0.18, now);
         gain1.gain.exponentialRampToValueAtTime(0.01, now + 0.12);
         osc1.connect(gain1);
         gain1.connect(ctx.destination);
@@ -109,10 +120,10 @@ function playMeowSound() {
         
         const osc2 = ctx.createOscillator();
         const gain2 = ctx.createGain();
-        osc2.type = 'sine';
+        osc2.type = 'triangle';
         osc2.frequency.setValueAtTime(500, now + 0.06);
-        osc2.frequency.linearRampToValueAtTime(380, now + 0.2);
-        gain2.gain.setValueAtTime(0.14, now + 0.06);
+        osc2.frequency.linearRampToValueAtTime(350, now + 0.2);
+        gain2.gain.setValueAtTime(0.12, now + 0.06);
         gain2.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
         osc2.connect(gain2);
         gain2.connect(ctx.destination);
