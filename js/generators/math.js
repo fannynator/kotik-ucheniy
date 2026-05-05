@@ -55,15 +55,27 @@ function pizzaSliceSVG(total, eaten) {
 // Исправленный makeWrongs
 function makeWrongs(c, n = 3) {
     const w = [];
-    const offsets = [-3, -2, -1, 1, 2, 3, 4, 5, -4, -5, 6, -6, 7, -7, 8, -8];
+    // Динамический разброс: 10% от числа, но минимум 1, максимум 15
+    const spread = Math.max(2, Math.min(15, Math.round(c * 0.15)));
+    
+    // Сначала пробуем близкие числа
+    const offsets = [];
+    for (let i = 1; i <= spread; i++) {
+        offsets.push(i, -i);
+    }
+    shuffle(offsets); // перемешиваем для разнообразия
+    
     for (let i = 0; i < offsets.length && w.length < n; i++) {
         const x = c + offsets[i];
         if (x >= 0 && x !== c && !w.includes(x)) w.push(x);
     }
+    
+    // Если не хватило — добавляем случайные
     while (w.length < n) {
-        const x = c + rnd(1, 10) * (Math.random() > 0.5 ? 1 : -1);
+        const x = c + rnd(1, spread) * (Math.random() > 0.5 ? 1 : -1);
         if (x >= 0 && x !== c && !w.includes(x)) w.push(x);
     }
+    
     return w;
 }
 
