@@ -9,11 +9,22 @@ import { openStoryPanel, closeStory, nextStoryStep } from './components/story.js
 import { renderTrapsPanel, updateTrapsBadge } from './components/trap.js';
 import { renderProfile } from './components/profile.js';
 import { startTutorial } from './components/tutorial.js';
-import { playSound, spawnLeaves } from './sounds.js';
+import { playSound, spawnLeaves, spawnGems } from './sounds.js';
 
 export function updateStats() {
+    const oldGems = parseInt($('#gemCount').textContent) || state.gems;
     $('#gemCount').textContent = state.gems;
     $('#streakCount').textContent = state.streak;
+    
+    // Если гемов стало больше — анимация
+    if (state.gems > oldGems) {
+        const diff = state.gems - oldGems;
+        const gemEl = $('#gemCount');
+        if (gemEl) {
+            const rect = gemEl.getBoundingClientRect();
+            spawnGems(Math.min(diff, 5), rect.left, rect.top - 30, gemEl);
+        }
+    }
 }
 
 export function showAchievementToast(name, desc) {
