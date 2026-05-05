@@ -20,7 +20,7 @@ export const showToast = (emoji, message, toastEl) => {
     toastEl._tid = setTimeout(() => toastEl.classList.remove('show'), 2000);
 };
 
-eexport const makeWrongs = (correct, count = 3) => {
+export const makeWrongs = (correct, count = 3) => {
     const wrongs = new Set();
     const maxAttempts = 50;
     let attempts = 0;
