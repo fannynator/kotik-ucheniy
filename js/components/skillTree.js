@@ -24,7 +24,7 @@ export function renderSkillTree() {
         if (s.status === 'completed') {
             pt = 'Пройдено';
         } else if (s.status === 'current') {
-            pt = s.progress > 0 ? `${s.progress}%` : 'Готов к старту 🚀';
+            pt = s.progress > 0 ? `${s.progress}%` : 'Начать урок! 🚀';
         } else {
             // Заблокирован
             if (i === firstLockedIndex && prevCompletedName) {
