@@ -136,6 +136,9 @@ function bindEvents() {
 }
 
 function init() {
+    if (localStorage.getItem('kot_ucheniy_dark_theme') === '1') {
+    document.body.classList.add('dark-theme');
+    }
     loadState();
     updateSubjectUI();
     renderSkillTree();
