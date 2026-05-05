@@ -28,6 +28,7 @@ export function renderProfile() {
         html += `<div class="ach-item ${cls}"><div class="ach-icon">${a.unlocked ? a.name.split(' ')[0] : '🔒'}</div><div class="ach-name">${a.name.split(' ').slice(1).join(' ')}</div><div class="ach-desc">${a.desc}</div></div>`;
     });
 
+    html += '<button class="reset-progress-btn" id="toggleThemeBtn" style="margin-bottom:6px;">🌙 Тёмная тема</button>';
     html += '</div><button class="reset-progress-btn" id="resetProgressBtn">🔄 Сбросить прогресс</button>';
     $('#profileContent').innerHTML = html;
 
