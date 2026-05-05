@@ -158,3 +158,37 @@ export function playSound(type) {
         case 'meow': playMeowSound(); break;
     }
 }
+
+export function spawnGems(count, startX, startY, targetEl) {
+    const target = targetEl || document.getElementById('gemCount');
+    if (!target) return;
+    
+    const targetRect = target.getBoundingClientRect();
+    const targetX = targetRect.left + targetRect.width / 2;
+    const targetY = targetRect.top + targetRect.height / 2;
+    
+    for (let i = 0; i < count; i++) {
+        const gem = document.createElement('span');
+        gem.textContent = '💎';
+        gem.style.cssText = `
+            position: fixed;
+            left: ${startX}px;
+            top: ${startY}px;
+            font-size: 16px;
+            pointer-events: none;
+            z-index: 1000;
+            transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            opacity: 1;
+        `;
+        document.body.appendChild(gem);
+        
+        requestAnimationFrame(() => {
+            gem.style.left = targetX + 'px';
+            gem.style.top = targetY + 'px';
+            gem.style.opacity = '0';
+            gem.style.transform = 'scale(0.3)';
+        });
+        
+        setTimeout(() => gem.remove(), 900);
+    }
+}
