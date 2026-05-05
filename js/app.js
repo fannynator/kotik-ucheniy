@@ -135,6 +135,38 @@ function bindEvents() {
     $('#btnFinishStory').addEventListener('click', closeStory);
 }
 
+function updateDailyStreak() {
+    const today = new Date().toDateString();
+    const lastVisit = localStorage.getItem('kot_ucheniy_last_visit');
+    
+    if (!lastVisit) {
+        // Первый визит
+        state.streak = 1;
+    } else if (lastVisit === today) {
+        // Уже заходил сегодня — ничего не делаем
+        return;
+    } else {
+        const lastDate = new Date(lastVisit);
+        const diffDays = Math.floor((new Date() - lastDate) / 86400000);
+        
+        if (diffDays === 1) {
+            // Заходил вчера — увеличиваем streak
+            state.streak++;
+        } else {
+            // Пропустил день — сброс
+            state.streak = 1;
+        }
+    }
+    
+    localStorage.setItem('kot_ucheniy_last_visit', today);
+    saveState();
+    updateStats();
+    
+    if (state.streak >= 7) {
+        showAchievementToast('🔥 Ударный режим!', `${state.streak} дней подряд!`);
+    }
+}
+
 function init() {
     if (localStorage.getItem('kot_ucheniy_dark_theme') === '1') {
     document.body.classList.add('dark-theme');
