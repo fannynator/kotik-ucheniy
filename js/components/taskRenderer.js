@@ -1,7 +1,6 @@
 // js/components/taskRenderer.js
 
 import { $, $$ } from '../utils.js';
-import { state } from '../state.js';
 import { playSound } from '../sounds.js';
 
 export function renderTask(container, task, options = {}) {
@@ -28,80 +27,29 @@ export function renderTask(container, task, options = {}) {
         questionEl.className = compact ? 'scene-text' : 'lesson-question';
         if (task.question) questionEl.textContent = task.question;
         container.appendChild(questionEl);
+
+        // Показываем визуализацию (SVG), если есть
+if (task.visual) {
+    const visualEl = document.createElement('div');
+    visualEl.innerHTML = task.visual;
+    visualEl.style.cssText = 'margin:8px 0;';
+    container.appendChild(visualEl);
+}
         
         const explanationEl = document.createElement('div');
         explanationEl.className = compact ? 'explanation-box' : 'lesson-explanation';
         container.appendChild(explanationEl);
         
-    if (task.type === 'visual') {
-        renderVisual(container, task, explanationEl, resolve, isBonus, compact);
-    } else if (task.type === 'choice') {
-        renderChoice(container, task, explanationEl, resolve, isBonus, compact);
-    } else if (task.type === 'input') {
-        renderInput(container, task, explanationEl, resolve, isBonus, compact);
-    } else if (task.type === 'pair') {
-        renderPair(container, task, explanationEl, resolve, isBonus, compact);
-    } else if (task.type && task.type.startsWith('boss')) {
-        renderBoss(container, task, explanationEl, resolve, isBonus);
-    }
+        if (task.type === 'choice') {
+            renderChoice(container, task, explanationEl, resolve, isBonus, compact);
+        } else if (task.type === 'input') {
+            renderInput(container, task, explanationEl, resolve, isBonus, compact);
+        } else if (task.type === 'pair') {
+            renderPair(container, task, explanationEl, resolve, isBonus, compact);
+        } else if (task.type && task.type.startsWith('boss')) {
+            renderBoss(container, task, explanationEl, resolve, isBonus);
+        }
     });
-}
-
-function renderVisual(container, task, explEl, resolve, isBonus, compact) {
-    // SVG-иллюстрация
-    const svgWrapper = document.createElement('div');
-    svgWrapper.className = 'visual-svg-wrapper';
-    svgWrapper.innerHTML = task.svg;
-    svgWrapper.style.cssText = 'width:100%;max-width:280px;margin:0 auto 8px;text-align:center;';
-    container.appendChild(svgWrapper);
-
-    const optsClass = compact ? 'task-options' : 'lesson-options';
-    const optClass = compact ? 'task-option' : 'lesson-option';
-    
-    const optsDiv = document.createElement('div');
-    optsDiv.className = optsClass;
-    
-    const correctAnswer = task.correctAns;
-    
-    task.options.forEach((optText, idx) => {
-        const btn = document.createElement('button');
-        btn.className = optClass;
-        btn.textContent = optText;
-        btn.dataset.idx = idx;
-        btn.dataset.value = String(optText);
-        
-        btn.addEventListener('click', () => {
-            optsDiv.querySelectorAll('button').forEach(b => b.style.pointerEvents = 'none');
-            
-            const isCorrect = String(btn.dataset.value) === String(correctAnswer);
-            
-            if (isCorrect) {
-                playSound('correct', state.theme);
-                btn.classList.add('correct-pick');
-                btn.textContent = '✅ ' + optText;
-                explEl.innerHTML = '<span style="font-size:16px;">✅</span> ' + task.explanation;
-                explEl.className = (compact ? 'explanation-box' : 'lesson-explanation') + ' show good';
-                setTimeout(() => resolve({ isCorrect: true, isBonus }), 400);
-            } else {
-                playSound('wrong', state.theme);
-                btn.classList.add('wrong-pick');
-                btn.textContent = '❌ ' + optText;
-                optsDiv.querySelectorAll('button').forEach(b => {
-                    if (String(b.dataset.value) === String(correctAnswer)) {
-                        b.classList.add('correct-pick');
-                        b.textContent = '✅ ' + b.dataset.value;
-                    }
-                });
-                explEl.innerHTML = '<span style="font-size:16px;">🤔</span> ' + task.explanation;
-                explEl.className = (compact ? 'explanation-box' : 'lesson-explanation') + ' show bad';
-                setTimeout(() => resolve({ isCorrect: false, isBonus }), 600);
-            }
-        });
-        
-        optsDiv.appendChild(btn);
-    });
-    
-    container.appendChild(optsDiv);
 }
 
 function renderChoice(container, task, explEl, resolve, isBonus, compact) {
@@ -126,14 +74,14 @@ function renderChoice(container, task, explEl, resolve, isBonus, compact) {
             const isCorrect = String(btn.dataset.value) === String(correctAnswer);
             
             if (isCorrect) {
-                playSound('correct', state.theme);
+                playSound('correct');
                 btn.classList.add('correct-pick');
                 btn.textContent = '✅ ' + optText;
                 explEl.innerHTML = '<span style="font-size:16px;">✅</span> ' + task.explanation;
                 explEl.className = (compact ? 'explanation-box' : 'lesson-explanation') + ' show good';
                 setTimeout(() => resolve({ isCorrect: true, isBonus }), 400);
             } else {
-                playSound('wrong', state.theme);
+                playSound('wrong');
                 btn.classList.add('wrong-pick');
                 btn.textContent = '❌ ' + optText;
                 optsDiv.querySelectorAll('button').forEach(b => {
@@ -198,14 +146,14 @@ function renderInput(container, task, explEl, resolve, isBonus, compact) {
         }
         
         if (isCorrect) {
-            playSound('correct', state.theme);
+            playSound('correct');
             input.style.borderColor = 'var(--green)';
             input.style.background = 'rgba(16,185,129,0.2)';
             explEl.textContent = '✅ ' + task.explanation;
             explEl.className = (compact ? 'explanation-box' : 'lesson-explanation') + ' show good';
             resolve({ isCorrect: true, isBonus });
         } else {
-            playSound('wrong', state.theme);
+            playSound('wrong');
             input.style.borderColor = 'var(--red)';
             input.style.background = 'rgba(239,68,68,0.15)';
             explEl.textContent = '🤔 ' + task.explanation + ' ✅ ' + task.correctAns;
@@ -284,7 +232,7 @@ function renderPair(container, task, explEl, resolve, isBonus, compact) {
             const rightIdx = parseInt(btn.dataset.pairIdx);
             
             if (selectedLeft.idx === rightIdx) {
-                playSound('correct', state.theme);
+                playSound('correct');
                 selectedLeft.el.classList.add('matched');
                 btn.classList.add('matched');
                 matchedCount++;
@@ -297,7 +245,7 @@ function renderPair(container, task, explEl, resolve, isBonus, compact) {
                     resolve({ isCorrect: true, isBonus });
                 }
             } else {
-                playSound('wrong', state.theme);
+                playSound('wrong');
                 btn.classList.add('wrong-flash');
                 setTimeout(() => btn.classList.remove('wrong-flash'), 500);
                 selectedLeft.el.classList.remove('selected');
@@ -368,12 +316,12 @@ function renderBoss(container, task, explEl, resolve, isBonus) {
         inputs.forEach(({ input }) => input.disabled = true);
         
         if (allOk) {
-            playSound('correct', state.theme);
+            playSound('correct');
             explEl.textContent = '✅ ' + task.explanation;
             explEl.className = 'lesson-explanation show good';
             resolve({ isCorrect: true, isBonus });
         } else {
-            playSound('wrong', state.theme);
+            playSound('wrong');
             explEl.textContent = '🤔 ' + task.explanation;
             explEl.className = 'lesson-explanation show bad';
             resolve({ isCorrect: false, isBonus });

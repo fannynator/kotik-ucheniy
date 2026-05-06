@@ -6,8 +6,12 @@
     <title>Кот Учёный — v15</title>
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#3B82F6">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%233B82F6'/><text x='50' y='70' font-size='60' text-anchor='middle'>🐱</text></svg>">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐱</text></svg>">
-    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/styles.css?v=2">
+    
 </head>
 <body>
     <div class="app" id="app">
@@ -138,17 +142,17 @@
     </div>
 
     <div class="tutorial-overlay" id="tutorialOverlay">
-        <div class="tutorial-card">
-            <div class="tutorial-emoji" id="tutEmoji">🐱</div>
-            <div class="tutorial-title" id="tutTitle"></div>
-            <div class="tutorial-text" id="tutText"></div>
-            <div class="tutorial-dots" id="tutDots"></div>
-            <button class="tutorial-btn" id="tutNext">Далее</button>
-            <button class="tutorial-skip" id="tutSkip">Пропустить</button>
-        </div>
+    <div class="tutorial-card">
+        <div class="tutorial-emoji" id="tutEmoji">🐱</div>
+        <div class="tutorial-title" id="tutTitle"></div>
+        <div class="tutorial-text" id="tutText"></div>
+        <div class="tutorial-dots" id="tutDots"></div>
+        <button class="tutorial-btn" id="tutNext">Далее</button>
+        <button class="tutorial-skip" id="tutSkip">Пропустить</button>
     </div>
+</div>
 
-    <script type="module" src="js/app.js"></script>
+    <script type="module" src="js/app.js?v=2"></script>
     <script>
         if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
     </script>
