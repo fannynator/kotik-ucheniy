@@ -47,36 +47,8 @@
             </button>
             <button class="nav-btn" id="navProfile"><span class="nav-icon">👤</span>Профиль</button>
         </div>
-
-        <!-- ПАНЕЛИ ВНУТРИ APP -->
-        <div class="panel-overlay" id="storyPanel">
-            <div class="panel-card">
-                <div class="panel-title">📖 Истории</div>
-                <div class="panel-subtitle" id="storyPanelSubtitle"></div>
-                <div id="storyList"></div>
-                <button class="panel-close" id="btnStoryPanelClose">Закрыть</button>
-            </div>
-        </div>
-        <div class="panel-overlay" id="trapsPanel">
-            <div class="panel-card">
-                <div class="panel-title">🪤 Ловушки</div>
-                <div class="panel-subtitle" id="trapsSubtitle"></div>
-                <div id="trapsList"></div>
-                <button class="panel-close" id="btnTrapsPanelClose">Закрыть</button>
-            </div>
-        </div>
-        <div class="panel-overlay" id="profilePanel">
-            <div class="panel-card">
-                <div id="profileContent"></div>
-                <button class="panel-close" id="btnProfilePanelClose">Закрыть</button>
-            </div>
-        </div>
-        <div class="panel-overlay" id="trapQuizOverlay">
-            <div class="panel-card" id="trapQuizCard"></div>
-        </div>
     </div>
 
-    <!-- ТОСТЫ И УРОКИ (ПОВЕРХ ВСЕГО) -->
     <div class="toast" id="toast"></div>
     <div class="achievement-toast" id="achToast">
         <span style="font-size:24px;">🏆</span><span id="achToastText"></span>
@@ -135,6 +107,35 @@
                 <button class="btn-finish-story math-finish" id="btnFinishStory">Завершить</button>
             </div>
         </div>
+    </div>
+
+    <div class="panel-overlay" id="storyPanel">
+        <div class="panel-card">
+            <div class="panel-title">📖 Истории</div>
+            <div class="panel-subtitle" id="storyPanelSubtitle"></div>
+            <div id="storyList"></div>
+            <button class="panel-close" id="btnStoryPanelClose">Закрыть</button>
+        </div>
+    </div>
+
+    <div class="panel-overlay" id="trapsPanel">
+        <div class="panel-card">
+            <div class="panel-title">🪤 Ловушки</div>
+            <div class="panel-subtitle" id="trapsSubtitle"></div>
+            <div id="trapsList"></div>
+            <button class="panel-close" id="btnTrapsPanelClose">Закрыть</button>
+        </div>
+    </div>
+
+    <div class="panel-overlay" id="profilePanel">
+        <div class="panel-card">
+            <div id="profileContent"></div>
+            <button class="panel-close" id="btnProfilePanelClose">Закрыть</button>
+        </div>
+    </div>
+
+    <div class="panel-overlay" id="trapQuizOverlay">
+        <div class="panel-card" id="trapQuizCard"></div>
     </div>
 
     <div class="tutorial-overlay" id="tutorialOverlay">

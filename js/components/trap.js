@@ -16,111 +16,29 @@ export function updateTrapsBadge() {
 }
 
 export function renderTrapsPanel() {
-    const av = getAvailableTraps();
-    const lo = getLockedTraps();
-    const de = getDefusedTraps();
-    
+    const av = getAvailableTraps(), lo = getLockedTraps(), de = getDefusedTraps();
     let html = '';
-    
     if (!av.length && !lo.length && !de.length) {
-        html = `
-            <div style="text-align:center;padding:30px 20px;">
-                <div style="font-size:48px;margin-bottom:12px;">🏆</div>
-                <div style="font-weight:700;font-size:15px;color:var(--text);margin-bottom:6px;">Ловушек нет!</div>
-                <div style="color:var(--text-light);font-size:12px;">Ошибайся в уроках — ловушки появятся здесь</div>
-            </div>`;
+        html = '<div style="text-align:center;padding:20px;">🏆<br><p style="color:var(--text-light);">Ловушек нет!</p></div>';
     } else {
-        if (av.length) {
-            html += '<div style="font-weight:700;color:var(--red);margin-bottom:8px;display:flex;align-items:center;gap:6px;"><span>🔴</span> Ожидают (' + av.length + ')</div>';
-            av.forEach(t => {
-                html += `
-                <div class="trap-item danger" data-id="${t.id}">
-                    <div class="trap-icon">🪤</div>
-                    <div class="trap-info">
-                        <div class="trap-name">${t.question}</div>
-                        <div class="trap-source">${t.source} · ${t.defuses}/${TRAP.MAX_DEFUSES}</div>
-                    </div>
-                    <span class="trap-status status-danger">Обезвредить</span>
-                </div>`;
-            });
-        }
-        
-        if (lo.length) {
-            html += '<div style="font-weight:700;color:var(--orange);margin:14px 0 8px;display:flex;align-items:center;gap:6px;"><span>🟡</span> Пауза (' + lo.length + ')</div>';
-            lo.forEach(t => {
-                const hrs = Math.ceil((new Date(t.nextDate) - new Date()) / 3600000);
-                html += `
-                <div class="trap-item warning">
-                    <div class="trap-icon">⏳</div>
-                    <div class="trap-info">
-                        <div class="trap-name">${t.question}</div>
-                        <div class="trap-source">Доступно через ~${hrs}ч · ${t.defuses}/${TRAP.MAX_DEFUSES}</div>
-                    </div>
-                    <span class="trap-status status-warning">Пауза</span>
-                </div>`;
-            });
-        }
-        
-        if (de.length) {
-            html += '<div style="font-weight:700;color:var(--green);margin:14px 0 8px;display:flex;align-items:center;gap:6px;"><span>🟢</span> Обезврежены (' + de.length + ')</div>';
-            de.forEach(t => {
-                html += `
-                <div class="trap-item defused">
-                    <div class="trap-icon">✅</div>
-                    <div class="trap-info">
-                        <div class="trap-name">${t.question}</div>
-                        <div class="trap-source">${t.source}</div>
-                    </div>
-                    <span class="trap-status status-defused">Готово</span>
-                </div>`;
-            });
-        }
+        if (av.length) { html += '<p style="font-weight:700;color:var(--red);margin-bottom:6px;">🔴 Ожидают</p>'; av.forEach(t => { html += `<div class="trap-item danger" data-id="${t.id}"><div class="trap-icon">🪤</div><div class="trap-info"><div class="trap-name">${t.question}</div><div class="trap-source">${t.source} | ${t.defuses}/${TRAP.MAX_DEFUSES}</div></div><span class="trap-status status-danger">Ждёт!</span></div>`; }); }
+        if (lo.length) { html += '<p style="font-weight:700;color:var(--orange);margin:10px 0 6px;">🟡 Пауза</p>'; lo.forEach(t => { const hrs = Math.ceil((new Date(t.nextDate)-new Date())/3600000); html += `<div class="trap-item warning"><div class="trap-icon">⏳</div><div class="trap-info"><div class="trap-name">${t.question}</div><div class="trap-source">Через ~${hrs}ч | ${t.defuses}/${TRAP.MAX_DEFUSES}</div></div><span class="trap-status status-warning">Пауза</span></div>`; }); }
+        if (de.length) { html += '<p style="font-weight:700;color:var(--green);margin:10px 0 6px;">🟢 Обезврежены</p>'; de.forEach(t => { html += `<div class="trap-item defused"><div class="trap-icon">✅</div><div class="trap-info"><div class="trap-name">${t.question}</div><div class="trap-source">${t.source}</div></div><span class="trap-status status-defused">Готово</span></div>`; }); }
     }
-    
     $('#trapsList').innerHTML = html;
-    $('#trapsSubtitle').textContent = av.length ? `${av.length} ловушка(и) требуют внимания` : '';
-    
-    $$('#trapsList .trap-item.danger').forEach(el => {
-        el.addEventListener('click', () => {
-            const t = state.traps.find(x => x.id === el.dataset.id);
-            if (t) openTrapQuiz(t);
-        });
-    });
+    $('#trapsSubtitle').textContent = av.length ? `${av.length} ловушка(и) ждёт!` : '';
+    $$('#trapsList .trap-item.danger').forEach(el => { el.addEventListener('click', () => { const t = state.traps.find(x => x.id === el.dataset.id); if (t) openTrapQuiz(t); }); });
 }
 
 function openTrapQuiz(trap) {
-    let html = `
-        <div style="text-align:center;font-size:40px;margin-bottom:8px;">🪤</div>
-        <div style="text-align:center;font-weight:800;font-size:14px;color:var(--text);margin-bottom:4px;">
-            Обезвреживание ${trap.defuses + 1}/${TRAP.MAX_DEFUSES}
-        </div>
-        <div style="text-align:center;font-size:13px;color:var(--text);margin-bottom:16px;line-height:1.5;">
-            ${trap.question}
-        </div>`;
-    
-    if (trap.isInput) {
-        html += `
-            <div class="task-input-row">
-                <input type="text" class="task-input" id="tqInp" placeholder="Ответ" autocomplete="off" style="color:var(--text);background:var(--bg);border-color:var(--text-light);">
-                <button class="btn-submit" id="tqSub">✓</button>
-            </div>`;
-    } else {
-        html += `<div class="task-options" id="tqOpts">`;
-        trap.options.forEach((o, i) => {
-            html += `<button class="task-option" data-idx="${i}" style="color:var(--text);border-color:var(--text-light);">${o}</button>`;
-        });
-        html += `</div>`;
-    }
-    
-    html += `
-        <div class="lesson-explanation" id="tqExpl"></div>
-        <button class="panel-close" id="tqClose" style="margin-top:12px;">Закрыть</button>`;
-    
+    let html = `<div style="text-align:center;font-size:40px;margin-bottom:8px;">🪤</div><div style="text-align:center;font-weight:800;font-size:14px;color:var(--text);margin-bottom:4px;">Обезвреживание ${trap.defuses+1}/${TRAP.MAX_DEFUSES}</div><div style="text-align:center;font-size:13px;color:var(--text);margin-bottom:14px;">${trap.question}</div>`;
+    if (trap.isInput) html += `<div class="task-input-row"><input type="text" class="task-input" id="tqInp" placeholder="Ответ" autocomplete="off"><button class="btn-submit" id="tqSub">✓</button></div>`;
+    else html += `<div class="task-options" id="tqOpts">${trap.options.map((o,i)=>`<button class="task-option" data-idx="${i}">${o}</button>`).join('')}</div>`;
+    html += `<div class="lesson-explanation" id="tqExpl"></div><button class="panel-close" id="tqClose" style="margin-top:10px;">Закрыть</button>`;
     $('#trapQuizCard').innerHTML = html;
     $('#trapQuizOverlay').classList.add('active');
 
-    const expl = $('#tqExpl');
-    let done = false;
+    const expl = $('#tqExpl'); let done = false;
 
     const success = () => {
         trap.defuses++;
@@ -152,43 +70,28 @@ function openTrapQuiz(trap) {
                             spawnLeaves();
                         }
                     }
-                    saveState();
-                    renderSkillTree();
+                    saveState(); renderSkillTree();
                 }
             }
         }
 
-        showToast(
-            trap.defuses >= TRAP.MAX_DEFUSES ? '🏆' : '✅',
-            trap.defuses >= TRAP.MAX_DEFUSES ? 'Ловушка обезврежена!' : `+${GEMS.TRAP_BASE_REWARD + trap.defuses * GEMS.TRAP_DEFUSE_MULTIPLIER} 💎`,
-            $('#toast')
-        );
+        showToast(trap.defuses >= TRAP.MAX_DEFUSES ? '🏆' : '✅', trap.defuses >= TRAP.MAX_DEFUSES ? 'Ловушка обезврежена!' : `+${GEMS.TRAP_BASE_REWARD + trap.defuses * GEMS.TRAP_DEFUSE_MULTIPLIER} 💎`, $('#toast'));
         checkAchievements((n, d) => showAchievementToast(n, d));
-        updateTrapsBadge();
-        renderTrapsPanel();
-        saveState();
+        updateTrapsBadge(); renderTrapsPanel(); saveState();
         setTimeout(() => $('#trapQuizOverlay').classList.remove('active'), 600);
     };
 
     if (trap.isInput) {
-        const inp = $('#tqInp');
-        const btn = $('#tqSub');
+        const inp = $('#tqInp'), btn = $('#tqSub');
         const submit = () => {
-            if (done) return;
-            done = true;
-            btn.disabled = true;
-            inp.disabled = true;
+            if (done) return; done = true; btn.disabled = true; inp.disabled = true;
             if (inp.value.trim().toLowerCase() === String(trap.answer).toLowerCase()) {
-                inp.style.borderColor = 'var(--green)';
-                inp.style.background = 'rgba(16,185,129,0.2)';
-                expl.textContent = '✅ ' + trap.explanation;
-                expl.className = 'lesson-explanation show good';
+                inp.style.borderColor = 'var(--green)'; inp.style.background = 'rgba(16,185,129,0.2)';
+                expl.textContent = '✅ ' + trap.explanation; expl.className = 'lesson-explanation show good';
                 success();
             } else {
-                inp.style.borderColor = 'var(--red)';
-                inp.style.background = 'rgba(239,68,68,0.15)';
-                expl.textContent = '🤔 ' + trap.explanation + ' ✅ ' + trap.answer;
-                expl.className = 'lesson-explanation show bad';
+                inp.style.borderColor = 'var(--red)'; inp.style.background = 'rgba(239,68,68,0.15)';
+                expl.textContent = '🤔 ' + trap.explanation + ' ✅ ' + trap.answer; expl.className = 'lesson-explanation show bad';
             }
         };
         btn.addEventListener('click', submit);
@@ -197,39 +100,22 @@ function openTrapQuiz(trap) {
     } else {
         const opts = $$('#tqOpts .task-option');
         opts.forEach(o => o.addEventListener('click', () => {
-            if (done) return;
-            done = true;
-            opts.forEach(x => x.style.pointerEvents = 'none');
+            if (done) return; done = true; opts.forEach(x => x.style.pointerEvents = 'none');
             const idx = parseInt(o.dataset.idx);
             if (idx === trap.correct) {
                 o.classList.add('correct-pick');
-                expl.textContent = '✅ ' + trap.explanation;
-                expl.className = 'lesson-explanation show good';
+                expl.textContent = '✅ ' + trap.explanation; expl.className = 'lesson-explanation show good';
                 success();
             } else {
-                o.classList.add('wrong-pick');
-                opts[trap.correct].classList.add('correct-pick');
-                expl.textContent = '🤔 ' + trap.explanation;
-                expl.className = 'lesson-explanation show bad';
+                o.classList.add('wrong-pick'); opts[trap.correct].classList.add('correct-pick');
+                expl.textContent = '🤔 ' + trap.explanation; expl.className = 'lesson-explanation show bad';
             }
         }));
     }
-    $('#tqClose').addEventListener('click', () => {
-        $('#trapQuizOverlay').classList.remove('active');
-        updateTrapsBadge();
-        renderTrapsPanel();
-    });
+    $('#tqClose').addEventListener('click', () => { $('#trapQuizOverlay').classList.remove('active'); updateTrapsBadge(); renderTrapsPanel(); });
 }
 
 document.addEventListener('DOMContentLoaded', () => {
     const overlay = $('#trapQuizOverlay');
-    if (overlay) {
-        overlay.addEventListener('click', (e) => {
-            if (e.target === overlay) {
-                overlay.classList.remove('active');
-                updateTrapsBadge();
-                renderTrapsPanel();
-            }
-        });
-    }
+    if (overlay) overlay.addEventListener('click', (e) => { if (e.target === overlay) { overlay.classList.remove('active'); updateTrapsBadge(); renderTrapsPanel(); } });
 });

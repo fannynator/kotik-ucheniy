@@ -1,17 +1,15 @@
 // js/sounds.js
 
-function getCtx() {
-    try {
-        return new (window.AudioContext || window.webkitAudioContext)();
-    } catch (e) {
-        return null;
-    }
+let audioCtx = null;
+
+function getAudioContext() {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    return audioCtx;
 }
 
 function playCorrectSound() {
     try {
-        const ctx = getCtx(); if (!ctx) return;
-        const now = ctx.currentTime;
+        const ctx = getAudioContext(); const now = ctx.currentTime;
         const o1 = ctx.createOscillator(); const g1 = ctx.createGain();
         o1.type = 'sine'; o1.frequency.setValueAtTime(523.25, now); o1.frequency.setValueAtTime(659.25, now + 0.08);
         g1.gain.setValueAtTime(0.25, now); g1.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
@@ -25,8 +23,7 @@ function playCorrectSound() {
 
 function playWrongSound() {
     try {
-        const ctx = getCtx(); if (!ctx) return;
-        const now = ctx.currentTime;
+        const ctx = getAudioContext(); const now = ctx.currentTime;
         const o = ctx.createOscillator(); const g = ctx.createGain();
         o.type = 'triangle'; o.frequency.setValueAtTime(220, now); o.frequency.linearRampToValueAtTime(110, now + 0.35);
         g.gain.setValueAtTime(0.25, now); g.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
@@ -36,8 +33,7 @@ function playWrongSound() {
 
 function playAchievementSound() {
     try {
-        const ctx = getCtx(); if (!ctx) return;
-        const now = ctx.currentTime;
+        const ctx = getAudioContext(); const now = ctx.currentTime;
         [523.25, 659.25, 783.99].forEach((f, i) => {
             const o = ctx.createOscillator(); const g = ctx.createGain();
             o.type = 'sine'; o.frequency.setValueAtTime(f, now + i * 0.12);
@@ -53,26 +49,16 @@ function playAchievementSound() {
     } catch (e) {}
 }
 
-function playMeowSound() {
+function playPetSound() {
     try {
-        const ctx = getCtx(); if (!ctx) return;
-        const now = ctx.currentTime;
-        // "Мя" — короткий высокий
-        const o1 = ctx.createOscillator(); const g1 = ctx.createGain();
-        o1.type = 'triangle';
-        o1.frequency.setValueAtTime(650, now);
-        o1.frequency.linearRampToValueAtTime(850, now + 0.06);
-        g1.gain.setValueAtTime(0.2, now);
-        g1.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
-        o1.connect(g1); g1.connect(ctx.destination); o1.start(now); o1.stop(now + 0.15);
-        // "у" — протяжный низкий
-        const o2 = ctx.createOscillator(); const g2 = ctx.createGain();
-        o2.type = 'triangle';
-        o2.frequency.setValueAtTime(450, now + 0.08);
-        o2.frequency.linearRampToValueAtTime(320, now + 0.35);
-        g2.gain.setValueAtTime(0.14, now + 0.08);
-        g2.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
-        o2.connect(g2); g2.connect(ctx.destination); o2.start(now + 0.08); o2.stop(now + 0.4);
+        const ctx = getAudioContext(); const now = ctx.currentTime;
+        const o = ctx.createOscillator(); const g = ctx.createGain();
+        const lfo = ctx.createOscillator(); const lfoG = ctx.createGain();
+        o.type = 'sine'; o.frequency.setValueAtTime(300, now); o.frequency.linearRampToValueAtTime(350, now + 0.15); o.frequency.linearRampToValueAtTime(280, now + 0.3);
+        lfo.type = 'sine'; lfo.frequency.setValueAtTime(8, now); lfoG.gain.setValueAtTime(20, now);
+        lfo.connect(lfoG); lfoG.connect(o.frequency);
+        g.gain.setValueAtTime(0.15, now); g.gain.exponentialRampToValueAtTime(0.01, now + 0.35);
+        o.connect(g); g.connect(ctx.destination); lfo.start(now); lfo.stop(now + 0.35); o.start(now); o.stop(now + 0.35);
     } catch (e) {}
 }
 
@@ -106,33 +92,11 @@ export function spawnLeaves() {
     setTimeout(() => c.remove(), 3500);
 }
 
-export function spawnGems(count, startX, startY, targetEl) {
-    const target = targetEl || document.getElementById('gemCount');
-    if (!target) return;
-    const targetRect = target.getBoundingClientRect();
-    const targetX = targetRect.left + targetRect.width / 2;
-    const targetY = targetRect.top + targetRect.height / 2;
-    for (let i = 0; i < count; i++) {
-        const gem = document.createElement('span');
-        gem.textContent = '💎';
-        gem.style.cssText = `position:fixed;left:${startX}px;top:${startY}px;font-size:16px;pointer-events:none;z-index:1000;transition:all 0.8s;opacity:1;`;
-        document.body.appendChild(gem);
-        requestAnimationFrame(() => {
-            gem.style.left = targetX + 'px';
-            gem.style.top = targetY + 'px';
-            gem.style.opacity = '0';
-            gem.style.transform = 'scale(0.3)';
-        });
-        setTimeout(() => gem.remove(), 900);
-    }
-}
-
 export function playSound(type) {
     switch (type) {
         case 'correct': playCorrectSound(); break;
         case 'wrong': playWrongSound(); break;
         case 'achievement': playAchievementSound(); spawnConfetti(); break;
-        case 'pet': playMeowSound(); break;
-        case 'meow': playMeowSound(); break;
+        case 'pet': playPetSound(); break;
     }
 }
