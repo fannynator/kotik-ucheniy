@@ -1,6 +1,7 @@
 // js/components/taskRenderer.js
 
 import { $, $$ } from '../utils.js';
+import { state } from '../state.js';
 import { playSound } from '../sounds.js';
 
 export function renderTask(container, task, options = {}) {
@@ -75,14 +76,14 @@ function renderVisual(container, task, explEl, resolve, isBonus, compact) {
             const isCorrect = String(btn.dataset.value) === String(correctAnswer);
             
             if (isCorrect) {
-                playSound('correct');
+                playSound('correct', state.theme);
                 btn.classList.add('correct-pick');
                 btn.textContent = '✅ ' + optText;
                 explEl.innerHTML = '<span style="font-size:16px;">✅</span> ' + task.explanation;
                 explEl.className = (compact ? 'explanation-box' : 'lesson-explanation') + ' show good';
                 setTimeout(() => resolve({ isCorrect: true, isBonus }), 400);
             } else {
-                playSound('wrong');
+                playSound('wrong', state.theme);
                 btn.classList.add('wrong-pick');
                 btn.textContent = '❌ ' + optText;
                 optsDiv.querySelectorAll('button').forEach(b => {
@@ -125,14 +126,14 @@ function renderChoice(container, task, explEl, resolve, isBonus, compact) {
             const isCorrect = String(btn.dataset.value) === String(correctAnswer);
             
             if (isCorrect) {
-                playSound('correct');
+                playSound('correct', state.theme);
                 btn.classList.add('correct-pick');
                 btn.textContent = '✅ ' + optText;
                 explEl.innerHTML = '<span style="font-size:16px;">✅</span> ' + task.explanation;
                 explEl.className = (compact ? 'explanation-box' : 'lesson-explanation') + ' show good';
                 setTimeout(() => resolve({ isCorrect: true, isBonus }), 400);
             } else {
-                playSound('wrong');
+                playSound('wrong', state.theme);
                 btn.classList.add('wrong-pick');
                 btn.textContent = '❌ ' + optText;
                 optsDiv.querySelectorAll('button').forEach(b => {
@@ -197,14 +198,14 @@ function renderInput(container, task, explEl, resolve, isBonus, compact) {
         }
         
         if (isCorrect) {
-            playSound('correct');
+            playSound('correct', state.theme);
             input.style.borderColor = 'var(--green)';
             input.style.background = 'rgba(16,185,129,0.2)';
             explEl.textContent = '✅ ' + task.explanation;
             explEl.className = (compact ? 'explanation-box' : 'lesson-explanation') + ' show good';
             resolve({ isCorrect: true, isBonus });
         } else {
-            playSound('wrong');
+            playSound('wrong', state.theme);
             input.style.borderColor = 'var(--red)';
             input.style.background = 'rgba(239,68,68,0.15)';
             explEl.textContent = '🤔 ' + task.explanation + ' ✅ ' + task.correctAns;
@@ -283,7 +284,7 @@ function renderPair(container, task, explEl, resolve, isBonus, compact) {
             const rightIdx = parseInt(btn.dataset.pairIdx);
             
             if (selectedLeft.idx === rightIdx) {
-                playSound('correct');
+                playSound('correct', state.theme);
                 selectedLeft.el.classList.add('matched');
                 btn.classList.add('matched');
                 matchedCount++;
@@ -296,7 +297,7 @@ function renderPair(container, task, explEl, resolve, isBonus, compact) {
                     resolve({ isCorrect: true, isBonus });
                 }
             } else {
-                playSound('wrong');
+                playSound('wrong', state.theme);
                 btn.classList.add('wrong-flash');
                 setTimeout(() => btn.classList.remove('wrong-flash'), 500);
                 selectedLeft.el.classList.remove('selected');
@@ -367,12 +368,12 @@ function renderBoss(container, task, explEl, resolve, isBonus) {
         inputs.forEach(({ input }) => input.disabled = true);
         
         if (allOk) {
-            playSound('correct');
+            playSound('correct', state.theme);
             explEl.textContent = '✅ ' + task.explanation;
             explEl.className = 'lesson-explanation show good';
             resolve({ isCorrect: true, isBonus });
         } else {
-            playSound('wrong');
+            playSound('wrong', state.theme);
             explEl.textContent = '🤔 ' + task.explanation;
             explEl.className = 'lesson-explanation show bad';
             resolve({ isCorrect: false, isBonus });

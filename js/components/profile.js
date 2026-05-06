@@ -1,8 +1,8 @@
 // js/components/profile.js
 
-import { $ } from '../utils.js';
-import { state, resetAllProgress } from '../state.js';
-import { SUBJECTS } from '../config.js';
+import { $, $$, showToast } from '../utils.js';
+import { state, resetAllProgress, applyTheme, saveState, checkThemeUnlocks } from '../state.js';
+import { SUBJECTS, THEMES, countCompletedLessons, CAT_SPEECH } from '../config.js';
 import { renderSkillTree } from './skillTree.js';
 import { updateStats } from '../app.js';
 
@@ -51,25 +51,64 @@ export function renderProfile() {
         </div>`;
     });
 
+    // Селектор тем
+    const totalDone = countCompletedLessons(state.skills[SUBJECTS.MATH]) + countCompletedLessons(state.skills[SUBJECTS.RUSSIAN]);
     html += `
     </div>
-    <button class="reset-progress-btn" id="toggleThemeBtn" style="margin-bottom:8px;">🌙 Тёмная тема</button>
+    <div class="theme-selector">
+        <div class="theme-selector-title"><span>🎨</span> Оформление</div>
+        <div class="theme-grid">`;
+
+    Object.values(THEMES).forEach(t => {
+        const isUnlocked = t.unlocked || (t.unlockAt && totalDone >= t.unlockAt);
+        const isActive = state.theme === t.id;
+        const lockEmoji = isUnlocked ? '' : `<span class="theme-lock">🔒</span>`;
+        html += `
+        <div class="theme-card ${isActive ? 'active' : ''} ${isUnlocked ? '' : 'locked'}" data-theme="${t.id}" data-unlocked="${isUnlocked ? '1' : '0'}">
+            ${lockEmoji}
+            <div class="theme-emoji">${t.catEmoji}</div>
+            <div class="theme-name">${t.name}</div>
+        </div>`;
+    });
+
+    html += `
+        </div>
+    </div>
     <button class="reset-progress-btn" id="resetProgressBtn">🔄 Сбросить прогресс</button>`;
 
     $('#profileContent').innerHTML = html;
 
-    // Переключатель темы
-    const themeBtn = $('#toggleThemeBtn');
-    if (themeBtn) {
-        const isDark = document.body.classList.contains('dark-theme');
-        themeBtn.textContent = isDark ? '☀️ Светлая тема' : '🌙 Тёмная тема';
-        themeBtn.addEventListener('click', () => {
-            document.body.classList.toggle('dark-theme');
-            const isDarkNow = document.body.classList.contains('dark-theme');
-            themeBtn.textContent = isDarkNow ? '☀️ Светлая тема' : '🌙 Тёмная тема';
-            localStorage.setItem('kot_ucheniy_dark_theme', isDarkNow ? '1' : '0');
+    // Переключение тем
+    $$('.theme-card').forEach(card => {
+        card.addEventListener('click', () => {
+            const themeId = card.dataset.theme;
+            const unlocked = card.dataset.unlocked === '1';
+            if (!unlocked) {
+                const t = THEMES[themeId];
+                showToast('🔒', `Разблокируется после ${t.unlockAt} уроков`, $('#toast'));
+                return;
+            }
+            applyTheme(themeId);
+            saveState();
+            // Обновляем активную карточку
+            $$('.theme-card').forEach(c => c.classList.remove('active'));
+            card.classList.add('active');
+            // Обновляем шапку под текущий предмет
+            const im = state.subject === SUBJECTS.MATH;
+            const headerBar = document.getElementById('headerBar');
+            const catStage = document.getElementById('catStage');
+            if (headerBar) headerBar.className = 'header ' + (im ? 'math-header' : 'rus-header');
+            if (catStage) catStage.className = 'cat-stage ' + (im ? 'math-stage' : 'rus-stage');
+            const btnMath = document.getElementById('btnMath');
+            const btnRus = document.getElementById('btnRus');
+            if (btnMath) btnMath.classList.toggle('active', im);
+            if (btnRus) btnRus.classList.toggle('active', !im);
+            const appEl = document.getElementById('app');
+            if (appEl) appEl.className = 'app' + (im ? '' : ' rus-mode');
+            const catSpeech = document.getElementById('catSpeech');
+            if (catSpeech) catSpeech.textContent = im ? CAT_SPEECH.math : CAT_SPEECH.russian;
         });
-    }
+    });
 
     // Сброс прогресса
     $('#resetProgressBtn').addEventListener('click', () => {

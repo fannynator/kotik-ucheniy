@@ -218,7 +218,7 @@ function finishLesson() {
     state.gems += xp; updateStats();
     unlockAchievement('student', (n, d) => showAchievementToast(n, d));
     if (w === 0) unlockAchievement('master', (n, d) => showAchievementToast(n, d));
-    playSound(w === 0 ? 'achievement' : 'correct');
+    playSound(w === 0 ? 'achievement' : 'correct', state.theme);
 
     const skill = getCurrentSkills().find(s => s.id === state.lessonSkillId);
     if (skill) {

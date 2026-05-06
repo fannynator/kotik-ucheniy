@@ -1,8 +1,8 @@
 // js/app.js
 
 import { $, $$, showToast } from './utils.js';
-import { state, loadState, saveState, unlockAchievement, checkAchievements } from './state.js';
-import { SUBJECTS, CAT_SPEECH, SUBJECT_EMOJI } from './config.js';
+import { state, loadState, saveState, unlockAchievement, checkAchievements, applyTheme, checkThemeUnlocks } from './state.js';
+import { SUBJECTS, CAT_SPEECH, SUBJECT_EMOJI, getTheme } from './config.js';
 import { renderSkillTree } from './components/skillTree.js';
 import { startLesson, closeLesson, nextLessonStep, checkSavedLesson } from './components/lesson.js';
 import { openStoryPanel, closeStory, nextStoryStep } from './components/story.js';
@@ -81,7 +81,10 @@ export function updateSubjectUI() {
     const catSpeech = $('#catSpeech');
     const catBody = $('#catBody');
     if (catSpeech) catSpeech.textContent = im ? CAT_SPEECH.math : CAT_SPEECH.russian;
-    if (catBody) catBody.textContent = SUBJECT_EMOJI[state.subject];
+    if (catBody) {
+        const theme = getTheme(state.theme);
+        catBody.textContent = theme.catEmoji || SUBJECT_EMOJI[state.subject];
+    }
 }
 
 function setupCatPet() {
@@ -93,7 +96,7 @@ function setupCatPet() {
         catBody.classList.add('petted');
         setTimeout(() => catBody.classList.remove('petted'), 600);
         state.totalPets++;
-        playSound('pet');
+        playSound('pet', state.theme);
         setCatMood('love');
         checkAchievements((name, desc) => showAchievementToast(name, desc));
 
@@ -189,14 +192,15 @@ function updateDailyStreak() {
 }
 
 function init() {
-    if (localStorage.getItem('kot_ucheniy_dark_theme') === '1') {
-    document.body.classList.add('dark-theme');
-    }
     loadState();
-     // Ежедневный streak
+    // Применяем тему
+    applyTheme(state.theme || 'light');
+    // Проверяем разблокировку тем
+    checkThemeUnlocks();
+    // Ежедневный streak
     updateDailyStreak();
     // Приветственное мяу
-    setTimeout(() => playSound('meow'), 500);
+    setTimeout(() => playSound('meow', state.theme), 500);
     updateSubjectUI();
     renderSkillTree();
     updateTrapsBadge();
