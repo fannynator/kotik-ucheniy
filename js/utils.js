@@ -22,30 +22,14 @@ export const showToast = (emoji, message, toastEl) => {
 
 export const makeWrongs = (correct, count = 3) => {
     const wrongs = new Set();
-    const maxAttempts = 50;
-    let attempts = 0;
-    
-    while (wrongs.size < count && attempts < maxAttempts) {
-        attempts++;
+    while (wrongs.size < count) {
         let delta;
-        if (correct <= 10) {
-            delta = rnd(-5, 5);
-        } else if (correct <= 50) {
-            delta = rnd(-Math.floor(correct * 0.3), Math.floor(correct * 0.3));
-        } else {
-            delta = rnd(-Math.floor(correct * 0.2), Math.floor(correct * 0.2));
-        }
-        
-        // Убеждаемся что дельта не ноль и не уводит в минус
-        if (delta === 0) delta = rnd(1, 3) * (Math.random() > 0.5 ? 1 : -1);
-        
+        if (correct <= 10) delta = rnd(-3, 3);
+        else if (correct <= 50) delta = rnd(-Math.floor(correct * 0.3), Math.floor(correct * 0.3));
+        else delta = rnd(-Math.floor(correct * 0.2), Math.floor(correct * 0.2));
         const candidate = correct + delta;
-        
-        if (candidate !== correct && candidate >= 0 && !wrongs.has(candidate)) {
-            wrongs.add(candidate);
-        }
+        if (candidate !== correct && candidate >= 0 && !wrongs.has(candidate)) wrongs.add(candidate);
     }
-    
     return [...wrongs];
 };
 
@@ -53,7 +37,6 @@ export const choiceT = (emoji, badge, badgeClass, question, correct, explanation
     const allOptions = [correct, ...makeWrongs(correct)];
     const options = shuffle(allOptions);
     const correctIdx = options.findIndex(opt => opt === correct);
-    
     return { type: 'choice', emoji, badge, badgeClass, question, options, correctIdx, correctAns: correct, explanation };
 };
 
